@@ -1,10 +1,27 @@
-#[macro_use]
-extern crate warp;
+#![feature(plugin)]
+#![plugin(rocket_codegen)]
 
-use warp::Filter;
+extern crate rocket;
+
+use std::io;
+
+use rocket::Request;
+use rocket::response::NamedFile;
+
+#[get("/")]
+fn home() -> io::Result<NamedFile> {
+    NamedFile::open("templates/landing.html")
+}
+
+#[catch(404)]
+fn not_found(_req: &Request) -> String { "Sorry, that url doesnt exist!".to_owned() }
+
+fn rocket() -> rocket::Rocket {
+    rocket::ignite()
+    .mount("/", routes![home])
+    .catch(catchers![not_found])
+}
 
 fn main() {
-    let hello = path!("Hello" / String).map(|name| format!("Hello {}!", name));
-
-    warp::serve(hello).run(([127, 0, 0, 1], 3030));
+    rocket().launch();
 }
