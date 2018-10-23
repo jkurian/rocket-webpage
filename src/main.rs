@@ -5,7 +5,6 @@ extern crate rocket;
 
 use std::io;
 
-use rocket::Request;
 use rocket::response::NamedFile;
 
 #[get("/")]
@@ -14,7 +13,9 @@ fn home() -> io::Result<NamedFile> {
 }
 
 #[catch(404)]
-fn not_found(_req: &Request) -> String { "Sorry, that url doesnt exist!".to_owned() }
+fn not_found() -> io::Result<NamedFile> {
+    NamedFile::open("templates/error.html")
+}
 
 fn rocket() -> rocket::Rocket {
     rocket::ignite()
