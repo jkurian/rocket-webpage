@@ -9,12 +9,12 @@ use rocket::response::NamedFile;
 
 #[get("/")]
 fn home() -> io::Result<NamedFile> {
-    NamedFile::open("templates/landing.html")
+    NamedFile::open("src/views/landing.html")
 }
 
 #[catch(404)]
 fn not_found() -> io::Result<NamedFile> {
-    NamedFile::open("templates/error.html")
+    NamedFile::open("src/views/error.html")
 }
 
 fn rocket() -> rocket::Rocket {
